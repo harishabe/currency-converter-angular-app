@@ -1,0 +1,27 @@
+<div class="table">
+    <mat-form-field>
+        <input type="text" matInput placeholder="{{baseCurrencyControl.value}}">
+    </mat-form-field>
+    <mat-form-field style="float: right;">
+        <input matInput (keyup)="applySearchFilter($event.target.value)" placeholder="Search">
+    </mat-form-field>   
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    <table style="width: 100%;" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- Position Column -->
+        <ng-container matColumnDef="currency">
+            <th mat-header-cell *matHeaderCellDef> Currency </th>
+            <td mat-cell *matCellDef="let element">
+                <a
+                    [routerLink]="['/currency-converter',baseCurrencyControl.value, element.currency]">{{element.currency}}</a>
+            </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef> Rate </th>
+            <td mat-cell *matCellDef="let element"> {{element.rate}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

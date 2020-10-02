@@ -1,0 +1,23 @@
+.converter-container {
+    margin: 5%;
+    padding: 25px;
+    .converter-btn {
+        padding-bottom: 1.34375em;
+      }
+      .container{
+        mat-form-field {            
+          margin-left: 20px;
+        }
+        span{
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+        button{
+            margin-left: 5%;
+        }
+      }
+      .reverse-btn:hover {
+          border: 1px solid;
+      }
+  }
+  
