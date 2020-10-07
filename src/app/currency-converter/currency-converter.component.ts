@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MappedCurrencyRate } from 'src/app/shared/interfaces/currency-rate';
 import { SearchHistory } from 'src/app/shared/interfaces/search-history';
+import { ApiService } from '../shared/services/api.service';
 import { CurrencyExchangeService } from 'src/app/shared/services/currency-exchange.service';
-import { ExchangeRatesApiService } from 'src/app/shared/services/exchange-rates-api.service';
 import { Currency } from 'src/app/shared/enum/currency';
 import { ExchangeRates } from 'src/app/shared/interfaces/exchange-rates';
 import { FormNames } from 'src/app/shared/enum/form-names';
@@ -38,8 +38,7 @@ export class CurrencyConverterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private currencyExchangeService: CurrencyExchangeService,
-    private exchangeRatesApiService: ExchangeRatesApiService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,private apiService: ApiService) { }
 
   ngOnInit(): void {
     const baseCurrency =
@@ -48,7 +47,7 @@ export class CurrencyConverterComponent implements OnInit {
       this.route.snapshot.paramMap.get('to') || Currency.HRK;
 
     this.currencyConverterForm = this.initForm(baseCurrency, quoteCurrency);
-    this.getExchangeRates(baseCurrency);
+    this.getExchangeRates();
 
     this.filteredFromCurrencies = this.getFromValueChanges(
       FormNames.FromCurrency
@@ -67,7 +66,6 @@ export class CurrencyConverterComponent implements OnInit {
     this.amount = Math.floor(
       this.currencyConverterForm.get(FormNames.Amount).value
     );
-console.log('test',this.currencyConverterForm.get(FormNames.Amount).value);
     this.result = this.calculateExchangeRate(
       this.fromCurrencyRate && this.fromCurrencyRate.rate,
       this.toCurrencyRate && this.toCurrencyRate.rate
@@ -103,24 +101,19 @@ console.log('test',this.currencyConverterForm.get(FormNames.Amount).value);
     );
   }
 
-  getExchangeRates(baseCurrencyCode: string) {
-    this.exchangeRatesApiService
-      .getLatestExchangeRates(baseCurrencyCode)
-      .subscribe(
-        (exchangeRate: ExchangeRates): void => {
-          this.currencyExchangeService.exchangeRates = this.mapExchangeRatesResponseData(
-            exchangeRate
-          );
-          this.currencyExchangeService.fromCurrencies = this.mapCurrencies();
-          this.currencyExchangeService.toCurrencies = this.mapCurrencies();
-        },
-        (error): void => {
-          console.error(error);
-        },
-        () => {
-          this.isLoading = false;
-        }
+  getExchangeRates() {
+    this.apiService.getAmount().subscribe((exchangeRates: any) => {
+      this.currencyExchangeService.exchangeRates = this.mapExchangeRatesResponseData(
+        exchangeRates
       );
+      this.currencyExchangeService.fromCurrencies = this.mapCurrencies();
+      this.currencyExchangeService.toCurrencies = this.mapCurrencies();
+      this.isLoading = false;
+    }, (err) => {
+      console.log('res', err);
+    }, () => {
+      this.isLoading = false;
+    });
   }
 
   private mapExchangeRatesResponseData(

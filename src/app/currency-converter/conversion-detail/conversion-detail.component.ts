@@ -31,7 +31,6 @@ export class ConversionDetailComponent implements OnInit {
 
     this.toCurrency = this.toCurrencyRate && this.toCurrencyRate.currency;
     this.toRate = this.toCurrencyRate && this.toCurrencyRate.rate;
-    console.log('fromCurrency',this.fromCurrency)
   }
 
 }
