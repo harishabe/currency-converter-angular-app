@@ -59,12 +59,12 @@ export class ExchangeRatesComponent implements OnInit {
       }
     );
 
-    const baseRate = mappedRates.find(
-      cRate => cRate.currency === responseData.base
-    );
-    if (!baseRate) {
-      mappedRates.push({ currency: responseData.base, rate: 1 });
-    }
+    // const baseRate = mappedRates.find(
+    //   cRate => cRate.currency === responseData.base
+    // );
+    // if (!baseRate) {
+    //   mappedRates.push({ currency: responseData.base, rate: 1 });
+    // }
 
     return mappedRates;
   }

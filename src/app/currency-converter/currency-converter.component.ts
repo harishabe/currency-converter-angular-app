@@ -49,10 +49,10 @@ export class CurrencyConverterComponent implements OnInit {
     this.currencyConverterForm = this.initForm(baseCurrency, quoteCurrency);
     this.getExchangeRates();
 
-    this.filteredFromCurrencies = this.getFromValueChanges(
-      FormNames.FromCurrency
-    );
-    this.filteredToCurrencies = this.getToValueChanges(FormNames.ToCurrency);
+    // this.filteredFromCurrencies = this.getFromValueChanges(
+    //   FormNames.FromCurrency
+    // );
+    // this.filteredToCurrencies = this.getToValueChanges(FormNames.ToCurrency);
   }
 
 
@@ -78,27 +78,6 @@ export class CurrencyConverterComponent implements OnInit {
       }
     )
     localStorage.searchHistory = JSON.stringify(this.searchHistory);
-  }
-
-  getFromValueChanges(formControlName: string): Observable<string[]> {
-    return this.currencyConverterForm.get(formControlName).valueChanges.pipe(
-      startWith(''),
-      map(value =>
-        this.filterCurrencies(
-          value,
-          this.currencyExchangeService.fromCurrencies
-        )
-      )
-    );
-  }
-
-  getToValueChanges(formControlName: string): Observable<string[]> {
-    return this.currencyConverterForm.get(formControlName).valueChanges.pipe(
-      startWith(''),
-      map(value =>
-        this.filterCurrencies(value, this.currencyExchangeService.toCurrencies)
-      )
-    );
   }
 
   getExchangeRates() {
